@@ -2,6 +2,12 @@
 
 Ce projet implémente une **API REST complète** qui agrège des données météorologiques provenant de plusieurs sources externes, en suivant les meilleures pratiques de développement incluant le **Test-Driven Development (TDD)**, les **tests de contrat**, les **tests de charge**, et un **système de monitoring avancé**.
 
+## 🎨 Nouvelle Interface Frontend Moderne
+
+- **Onglets & boutons** : Bleus cohérents, contrastés, accessibles.
+- **Cartes météo** : Affichage visuel, icônes météo, graphiques colorés.
+- **Responsive** : Adapté mobile & desktop.
+
 ## 🏗️ Architecture & Stack Technologique
 
 - **Backend**: Node.js avec Express.js
