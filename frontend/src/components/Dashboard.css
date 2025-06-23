@@ -1,0 +1,87 @@
+.dashboard {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 40px;
+  color: #2d3a4a;
+}
+
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: #2d3a4a;
+  text-shadow: 0 2px 8px #e3eaf3;
+}
+
+.dashboard-header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  color: #3a4e7a;
+}
+
+.recent-section,
+.popular-section {
+  margin-bottom: 32px;
+}
+
+.recent-section h3,
+.popular-section h3 {
+  color: #3a4e7a;
+  margin-bottom: 16px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.popular-cities {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.weather-result {
+  margin: 32px 0;
+}
+
+.info-section {
+  margin-top: 40px;
+}
+
+.info-section .card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(58, 78, 122, 0.07);
+  border: 1px solid #e3eaf3;
+  color: #2d3a4a;
+}
+
+.info-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.info-section li {
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-section li:last-child {
+  border-bottom: none;
+}
+
+.info-section strong {
+  color: #667eea;
+}
+
+@media (max-width: 768px) {
+  .dashboard-header h1 {
+    font-size: 2rem;
+  }
+  
+  .dashboard-header p {
+    font-size: 1rem;
+  }
+} 

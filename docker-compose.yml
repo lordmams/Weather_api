@@ -8,9 +8,21 @@ services:
       - "3000:3000"
     environment:
       - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgresql://weather_user:password@postgres:5432/weather_db
       - WEATHERAPI_KEY=${WEATHERAPI_KEY} # Transférer la clé depuis le .env local
     depends_on:
       - redis
+      - postgres
+    networks:
+      - app-network
+
+  # Frontend React
+  frontend:
+    build: ./frontend
+    ports:
+      - "3080:80"
+    depends_on:
+      - api
     networks:
       - app-network
 

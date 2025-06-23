@@ -1,0 +1,68 @@
+.weather-card {
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.weather-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.weather-header h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin: 0;
+}
+
+.weather-icon {
+  font-size: 3rem;
+}
+
+.weather-condition {
+  font-size: 1.2rem;
+  color: #6c757d;
+  margin-bottom: 24px;
+  font-weight: 500;
+}
+
+.sources-section {
+  margin: 24px 0;
+  text-align: left;
+}
+
+.sources-section h4 {
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sources {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.view-details-btn {
+  margin-top: 20px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .weather-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .weather-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .weather-icon {
+    font-size: 2.5rem;
+  }
+} 
