@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # Notre application Node.js
+  api:
+    build: . # Construire l'image à partir du Dockerfile local
+    ports:
+      - "3000:3000"
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - WEATHERAPI_KEY=${WEATHERAPI_KEY} # Transférer la clé depuis le .env local
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
+  # Base de données pour les données persistantes (non utilisée pour l'instant)
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: weather_db
+      POSTGRES_USER: weather_user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+  
+  # Cache en mémoire
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+  # Service de collecte de métriques
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    depends_on:
+      - api
+    networks:
+      - app-network
+
+  # Service de visualisation
+  grafana:
+    image: grafana/grafana-oss:9.5.3
+    ports:
+      - "4000:3000" # Port externe 4000, interne 3000
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data: 

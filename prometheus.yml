@@ -1,0 +1,10 @@
+# prometheus.yml
+global:
+  scrape_interval: 15s # Par défaut, interroger toutes les 15 secondes
+
+scrape_configs:
+  - job_name: 'weather-api-scrape'
+    static_configs:
+      # L'API Node.js sera accessible via le nom de service 'api'
+      # sur le port 3000 à l'intérieur du réseau Docker.
+      - targets: ['api:3000'] 
