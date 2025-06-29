@@ -1,6 +1,5 @@
 const request = require('supertest');
 const app = require('../src/app'); // Importer l'app, pas le serveur
-const server = require('../src/server'); // Importer le serveur pour le fermer
 const axios = require('axios');
 const geocodingService = require('../services/geocodingService');
 const { disconnectRedis } = require('../services/cacheService');
@@ -14,7 +13,6 @@ jest.mock('../services/geocodingService');
 
 afterAll(async () => {
   await disconnectRedis();
-  server.close(); // Fermer le serveur correctement
 });
 
 describe('Weather API Endpoints', () => {

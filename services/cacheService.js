@@ -3,20 +3,27 @@ const redis = require('redis');
 let redisClient;
 let isRedisConnected = false;
 let redisEnabled = true;
+let connectionAttempted = false;
 
 /**
  * Connects to the Redis server.
  * Handles connection events and errors.
  */
 const connectRedis = async () => {
+  // Prevent multiple connection attempts
+  if (connectionAttempted) {
+    return;
+  }
+  connectionAttempted = true;
+
   if (isRedisConnected) {
     console.log('Redis client is already connected.');
     return;
   }
   
   // Check if Redis is disabled via environment variable
-  if (process.env.REDIS_DISABLED === 'true') {
-    console.log('Redis is disabled via REDIS_DISABLED environment variable.');
+  if (process.env.REDIS_DISABLED === 'true' || process.env.NODE_ENV === 'test') {
+    console.log('Redis is disabled (REDIS_DISABLED=true or NODE_ENV=test).');
     redisEnabled = false;
     return;
   }
@@ -27,6 +34,7 @@ const connectRedis = async () => {
   redisClient.on('error', (err) => {
     console.error('Redis Client Error', err);
     isRedisConnected = false;
+    redisEnabled = false;
     // Don't throw error, just log it and continue without Redis
     console.log('Continuing without Redis cache...');
   });
