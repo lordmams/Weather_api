@@ -1,4 +1,6 @@
-# 🌤️ API Météorologique - Projet Complet
+# 🌤️ API Météorologique - Projet Complet Nimaga Mahamadou
+
+> ⚙️ **CI/CD** : Ce projet intègre une chaîne CI/CD automatisée pour garantir la qualité du code, l'exécution des tests et le déploiement continu.
 
 Ce projet implémente une **API REST complète** qui agrège des données météorologiques provenant de plusieurs sources externes, en suivant les meilleures pratiques de développement incluant le **Test-Driven Development (TDD)**, les **tests de contrat**, les **tests de charge**, et un **système de monitoring avancé**.
 
