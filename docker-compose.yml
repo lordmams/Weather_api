@@ -75,6 +75,9 @@ services:
       - prometheus
     networks:
       - app-network
+    volumes:
+      - ./grafana/provisioning/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/provisioning/dashboards/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
 
 networks:
   app-network:
