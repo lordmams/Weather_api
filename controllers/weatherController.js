@@ -68,22 +68,28 @@ const getCurrentWeather = async (req, res) => {
         // 4. Traiter et sauvegarder les données
         if (results[0].status === 'fulfilled' && results[0].value.data.current_weather) {
             const openMeteoData = results[0].value.data.current_weather;
-            aggregatedData.sources.push({
-                name: 'Open-Meteo',
-                data: openMeteoData
-            });
-            // Sauvegarder en base
-            await weatherData.saveWeatherData(city, 'current', 'open-meteo', openMeteoData);
+            // Validate that we have meaningful data
+            if (openMeteoData && typeof openMeteoData.temperature !== 'undefined') {
+                aggregatedData.sources.push({
+                    name: 'Open-Meteo',
+                    data: openMeteoData
+                });
+                // Sauvegarder en base
+                await weatherData.saveWeatherData(city, 'current', 'open-meteo', openMeteoData);
+            }
         }
 
         if (results[1].status === 'fulfilled' && results[1].value.data.current) {
             const weatherApiData = results[1].value.data.current;
-            aggregatedData.sources.push({
-                name: 'WeatherAPI',
-                data: weatherApiData
-            });
-            // Sauvegarder en base
-            await weatherData.saveWeatherData(city, 'current', 'weatherapi', weatherApiData);
+            // Validate that we have meaningful data
+            if (weatherApiData && typeof weatherApiData.temp_c !== 'undefined') {
+                aggregatedData.sources.push({
+                    name: 'WeatherAPI',
+                    data: weatherApiData
+                });
+                // Sauvegarder en base
+                await weatherData.saveWeatherData(city, 'current', 'weatherapi', weatherApiData);
+            }
         }
 
         if (aggregatedData.sources.length === 0) {
@@ -152,20 +158,26 @@ const getForecast = async (req, res) => {
         // 4. Traiter et sauvegarder les données
         if (results[0].status === 'fulfilled' && results[0].value.data.daily) {
             const openMeteoData = results[0].value.data.daily;
-            aggregatedData.sources.push({
-                name: 'Open-Meteo',
-                data: openMeteoData
-            });
-            await weatherData.saveWeatherData(city, 'forecast', 'open-meteo', openMeteoData);
+            // Validate that we have meaningful data
+            if (openMeteoData && openMeteoData.time && openMeteoData.time.length > 0) {
+                aggregatedData.sources.push({
+                    name: 'Open-Meteo',
+                    data: openMeteoData
+                });
+                await weatherData.saveWeatherData(city, 'forecast', 'open-meteo', openMeteoData);
+            }
         }
 
         if (results[1].status === 'fulfilled' && results[1].value.data?.forecast?.forecastday) {
             const weatherApiData = results[1].value.data.forecast.forecastday;
-            aggregatedData.sources.push({
-                name: 'WeatherAPI',
-                data: weatherApiData
-            });
-            await weatherData.saveWeatherData(city, 'forecast', 'weatherapi', weatherApiData);
+            // Validate that we have meaningful data
+            if (weatherApiData && weatherApiData.length > 0 && weatherApiData[0].date) {
+                aggregatedData.sources.push({
+                    name: 'WeatherAPI',
+                    data: { forecastday: weatherApiData }
+                });
+                await weatherData.saveWeatherData(city, 'forecast', 'weatherapi', weatherApiData);
+            }
         }
 
         if (aggregatedData.sources.length === 0) {

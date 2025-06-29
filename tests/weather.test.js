@@ -70,13 +70,53 @@ describe('Weather API Endpoints', () => {
   describe('GET /weather/forecast/:city', () => {
     it('should return aggregated forecast data', async () => {
       geocodingService.getCoordinatesForCity.mockResolvedValue({ name: 'London', latitude: 51.5, longitude: -0.12 });
-      const mockOpenMeteo = { data: { daily: { time: ['d1'] }}};
-      const mockWeatherApi = { data: { forecast: { forecastday: [{ date: 'd1', day: { maxtemp_c: 12, mintemp_c: 5, condition: {text: 'Sunny'} }}] }}};
+      const mockOpenMeteo = { 
+        data: { 
+          daily: { 
+            time: ['2023-01-01', '2023-01-02'],
+            temperature_2m_max: [12, 15],
+            temperature_2m_min: [5, 8],
+            weathercode: [1, 2]
+          }
+        }
+      };
+      const mockWeatherApi = { 
+        data: { 
+          forecast: { 
+            forecastday: [
+              { 
+                date: '2023-01-01', 
+                day: { 
+                  maxtemp_c: 12, 
+                  mintemp_c: 5, 
+                  condition: {text: 'Sunny'}
+                }
+              },
+              {
+                date: '2023-01-02',
+                day: {
+                  maxtemp_c: 15,
+                  mintemp_c: 8,
+                  condition: {text: 'Cloudy'}
+                }
+              }
+            ] 
+          }
+        }
+      };
       axios.get.mockResolvedValueOnce(mockOpenMeteo).mockResolvedValueOnce(mockWeatherApi);
       
       const response = await request(app).get('/weather/forecast/London');
       expect(response.status).toBe(200);
-      expect(ajv.validate(forecastSchema, response.body)).toBe(true);
+      
+      // Debug: Log the response and validation errors
+      console.error('Response body:', JSON.stringify(response.body, null, 2));
+      const isValid = ajv.validate(forecastSchema, response.body);
+      if (!isValid) {
+        console.error('Validation errors:', JSON.stringify(ajv.errors, null, 2));
+      }
+      
+      expect(isValid).toBe(true);
       expect(response.body.sources).toHaveLength(2);
     });
 
