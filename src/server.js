@@ -8,9 +8,13 @@ const PORT = process.env.PORT || 3000;
 // Initialisation des services
 async function initializeServices() {
   try {
-    // Connexion à Redis
-    await connectRedis();
-    console.log('✅ Redis connecté');
+    // Connexion à Redis (optionnel)
+    try {
+      await connectRedis();
+      console.log('✅ Redis connecté');
+    } catch (error) {
+      console.log('⚠️ Redis non disponible, application continue sans cache');
+    }
 
     // Initialisation de la base de données
     const weatherData = new WeatherData();
@@ -24,6 +28,7 @@ async function initializeServices() {
 
   } catch (error) {
     console.error('❌ Erreur initialisation services:', error);
+    // Don't exit the process, let the server start anyway
   }
 }
 

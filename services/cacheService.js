@@ -2,6 +2,7 @@ const redis = require('redis');
 
 let redisClient;
 let isRedisConnected = false;
+let redisEnabled = true;
 
 /**
  * Connects to the Redis server.
@@ -13,12 +14,21 @@ const connectRedis = async () => {
     return;
   }
   
+  // Check if Redis is disabled via environment variable
+  if (process.env.REDIS_DISABLED === 'true') {
+    console.log('Redis is disabled via REDIS_DISABLED environment variable.');
+    redisEnabled = false;
+    return;
+  }
+  
   const redisURL = process.env.REDIS_URL || 'redis://localhost:6379';
   redisClient = redis.createClient({ url: redisURL });
 
   redisClient.on('error', (err) => {
     console.error('Redis Client Error', err);
     isRedisConnected = false;
+    // Don't throw error, just log it and continue without Redis
+    console.log('Continuing without Redis cache...');
   });
 
   redisClient.on('connect', () => {
@@ -39,6 +49,8 @@ const connectRedis = async () => {
     await redisClient.connect();
   } catch (err) {
     console.error('Failed to connect to Redis:', err);
+    console.log('Continuing without Redis cache...');
+    redisEnabled = false;
   }
 };
 
@@ -57,7 +69,7 @@ const disconnectRedis = async () => {
  * @returns {Promise<any|null>} The cached data, or null if not found.
  */
 const getCache = async (key) => {
-  if (!isRedisConnected) return null;
+  if (!redisEnabled || !isRedisConnected) return null;
   try {
     const data = await redisClient.get(key);
     return data ? JSON.parse(data) : null;
@@ -74,7 +86,7 @@ const getCache = async (key) => {
  * @param {number} expirationInSeconds The cache expiration time in seconds.
  */
 const setCache = async (key, value, expirationInSeconds) => {
-  if (!isRedisConnected) return;
+  if (!redisEnabled || !isRedisConnected) return;
   try {
     await redisClient.setEx(
       key,
